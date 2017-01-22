@@ -45,7 +45,22 @@ namespace SimpleWikiParser
         [InlineData(" Lorem ipsum *dolor*", "<p> Lorem ipsum <i>dolor</i></p>")]
         [InlineData("This is just *random text*","<p>This is just <i>random text</i></p>")]
         [InlineData("Secondary *random* *text*","<p>Secondary <i>random</i> <i>text</i></p>")]
-        public void ContentEnclosedWithSingleAsterisksIsTransformedIntoItalicTag
+        public void ContentEnclosedWithCommonMarkItalicTagIsTransformedIntoItalicHTMLTag
+            (string content, string expected)
+        {
+            // Arrange
+            var parser = new CommonMarkParser();
+            // Act
+            var actual = parser.ParseToHtml(content);
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("This is **bolded**", "<p>This is <b>bolded</b></p>")]
+        [InlineData("**Exemplary text here**","<p><b>Exemplary text here</b></p>")]
+        [InlineData("Multiple **text** and **twists**","<p>Multiple <b>text</b> and <b>twists</b></p>")]
+        public void ContentEnclosedWithCommonMarkBoldTagIsTranslatedIntoBoldHTMLTag
             (string content, string expected)
         {
             // Arrange
@@ -57,17 +72,12 @@ namespace SimpleWikiParser
         }
 
 
-        [Theory]
-        [InlineData("This is **bolded**", "<p>This is <b>bolded</b></p>")]
-        public void ContentEnclosedWithDoubleAsterisksIsTranslatedIntoBoldHTMLTags
-            (string content, string expected)
+        [Fact]
+        public void ContentWithBothItalicAndBoldCommonMarkTagsIsTranslatedToHTMLCorrectly() 
         {
             // Arrange
-            var parser = new CommonMarkParser();
             // Act
-            var actual = parser.ParseToHtml(content);
             // Assert
-            Assert.Equal(expected, actual);
         }
 
     }
@@ -79,6 +89,7 @@ namespace SimpleWikiParser
         }
 
         // May have a String Checker for CommonMark Tags
+        // TODO: Should I refactor now? theres really a lot of duplication already
         internal string ParseToHtml(string content)
         {
             if (content.Contains("**"))
