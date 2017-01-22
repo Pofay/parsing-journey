@@ -41,12 +41,12 @@ namespace SimpleWikiParser
         }
 
         [Theory]
-        [InlineData("<p><i>Test Text</i></p>", "*Test Text*")]
-        [InlineData("<p> Lorem ipsum <i>dolor</i></p>", " Lorem ipsum *dolor*")]
-        [InlineData("<p>This is just <i>random text</i></p>", "This is just *random text*")]
-        [InlineData("<p>Secondary <i>random</i> <i>text</i></p>", "Secondary *random* *text*")]
+        [InlineData("*Test Text*", "<p><i>Test Text</i></p>")]
+        [InlineData(" Lorem ipsum *dolor*", "<p> Lorem ipsum <i>dolor</i></p>")]
+        [InlineData("This is just *random text*","<p>This is just <i>random text</i></p>")]
+        [InlineData("Secondary *random* *text*","<p>Secondary <i>random</i> <i>text</i></p>")]
         public void ContentEnclosedWithSingleAsterisksIsTransformedIntoItalicTag
-            (string expected, string content)
+            (string content, string expected)
         {
             // Arrange
             var parser = new CommonMarkParser();
