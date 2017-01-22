@@ -44,6 +44,7 @@ namespace SimpleWikiParser
         [InlineData("<p><i>Test Text</i></p>", "*Test Text*")]
         [InlineData("<p> Lorem ipsum <i>dolor</i></p>", " Lorem ipsum *dolor*")]
         [InlineData("<p>This is just <i>random text</i></p>", "This is just *random text*")]
+        [InlineData("<p>Secondary <i>random</i> <i>text</i></p>", "Secondary *random* *text*")]
         public void ContentEnclosedWithSingleAsterisksIsTransformedIntoItalicTag
             (string expected, string content)
         {
@@ -68,11 +69,15 @@ namespace SimpleWikiParser
         {
             if (content.Contains("*"))
             {
-                var startIndex = content.IndexOf("*") + 1;
-                var endIndex = content.IndexOf("*", startIndex);
-                var extractedContent = content.Substring(startIndex, endIndex - startIndex);
-                var actualContent = content.Replace("*" + extractedContent + "*",
+                var actualContent = content;
+                while (actualContent.Contains("*"))
+                {
+                    var startIndex = actualContent.IndexOf("*") + 1;
+                    var endIndex = actualContent.IndexOf("*", startIndex);
+                    var extractedContent = actualContent.Substring(startIndex, endIndex - startIndex);
+                    actualContent = actualContent.Replace("*" + extractedContent + "*",
                     "<i>" + extractedContent + "</i>");
+                }
                 return "<p>" + actualContent + "</p>";
             }
             return "<p>" + content + "</p>";
