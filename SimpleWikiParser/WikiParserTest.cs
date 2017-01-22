@@ -56,6 +56,20 @@ namespace SimpleWikiParser
             Assert.Equal(expected, actual);
         }
 
+
+        [Theory]
+        [InlineData("This is **bolded**", "<p>This is <b>bolded</b></p>")]
+        public void ContentEnclosedWithDoubleAsterisksIsTranslatedIntoBoldHTMLTags
+            (string content, string expected)
+        {
+            // Arrange
+            var parser = new CommonMarkParser();
+            // Act
+            var actual = parser.ParseToHtml(content);
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
     }
 
     internal class CommonMarkParser
@@ -67,7 +81,20 @@ namespace SimpleWikiParser
         // May have a String Checker for CommonMark Tags
         internal string ParseToHtml(string content)
         {
-            if (content.Contains("*"))
+            if (content.Contains("**"))
+            {
+                var actualContent = content;
+                while (actualContent.Contains("**"))
+                {
+                    var startIndex = actualContent.IndexOf("**") + 2;
+                    var endIndex = actualContent.IndexOf("**", startIndex);
+                    var extractedContent = actualContent.Substring(startIndex, endIndex - startIndex);
+                    actualContent = actualContent.Replace("**" + extractedContent + "**",
+                    "<b>" + extractedContent + "</b>");
+                }
+                return "<p>" + actualContent + "</p>";
+            }
+            else if (content.Contains("*"))
             {
                 var actualContent = content;
                 while (actualContent.Contains("*"))
@@ -79,7 +106,7 @@ namespace SimpleWikiParser
                     "<i>" + extractedContent + "</i>");
                 }
                 return "<p>" + actualContent + "</p>";
-            }
+            } 
             return "<p>" + content + "</p>";
         }
     }

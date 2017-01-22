@@ -23,7 +23,18 @@ namespace SimpleWikiParser
             var actual = content.Replace("*" + extracted + "*", "<i>" + extracted + "</i>");
             // Assert
             Assert.Equal(expected, actual);
-        } 
+        }
+
+        [Fact]
+        public void FindingDoubleCharacters() 
+        {
+            // Arrange
+            var someString = "**Pofay";
+            // Act
+            var actual = someString.Contains("**");
+            // Assert
+            Assert.True(actual);
+        }
 
 
     }
