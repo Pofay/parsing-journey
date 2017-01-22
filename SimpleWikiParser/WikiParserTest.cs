@@ -71,13 +71,17 @@ namespace SimpleWikiParser
             Assert.Equal(expected, actual);
         }
 
-
         [Fact]
         public void ContentWithBothItalicAndBoldCommonMarkTagsIsTranslatedToHTMLCorrectly() 
         {
             // Arrange
+            var content = "I have both *italic* and **bold** text";
+            var parser = new CommonMarkParser();
+            var expected = "<p>I have both <i>italic</i> and <b>bold</b> text</p>";
             // Act
+            var actual = parser.ParseToHtml(content);
             // Assert
+            Assert.Equal(expected, actual);
         }
 
     }
@@ -92,9 +96,9 @@ namespace SimpleWikiParser
         // TODO: Should I refactor now? theres really a lot of duplication already
         internal string ParseToHtml(string content)
         {
-            if (content.Contains("**"))
+            var actualContent = content;
+            if (actualContent.Contains("**"))
             {
-                var actualContent = content;
                 while (actualContent.Contains("**"))
                 {
                     var startIndex = actualContent.IndexOf("**") + 2;
@@ -103,11 +107,9 @@ namespace SimpleWikiParser
                     actualContent = actualContent.Replace("**" + extractedContent + "**",
                     "<b>" + extractedContent + "</b>");
                 }
-                return "<p>" + actualContent + "</p>";
             }
-            else if (content.Contains("*"))
+            if (actualContent.Contains("*"))
             {
-                var actualContent = content;
                 while (actualContent.Contains("*"))
                 {
                     var startIndex = actualContent.IndexOf("*") + 1;
@@ -116,9 +118,8 @@ namespace SimpleWikiParser
                     actualContent = actualContent.Replace("*" + extractedContent + "*",
                     "<i>" + extractedContent + "</i>");
                 }
-                return "<p>" + actualContent + "</p>";
             } 
-            return "<p>" + content + "</p>";
+            return "<p>" + actualContent + "</p>";
         }
     }
 }
