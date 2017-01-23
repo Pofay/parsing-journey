@@ -75,6 +75,7 @@ namespace SimpleWikiParser
         [InlineData("I have both *italic* and **bold** text", "<p>I have both <i>italic</i> and <b>bold</b> text</p>")]
         [InlineData("***Italic and bold***", "<p><b><i>Italic and bold</i></b></p>")]
         [InlineData("***Some*** ***Text*** ***Here***", "<p><b><i>Some</i></b> <b><i>Text</i></b> <b><i>Here</i></b></p>")]
+        [InlineData("**Something is *fishy* here**", "<p><b>Something is <i>fishy</i> here</b></p>")]
         public void ContentWithBothItalicAndBoldCommonMarkTagsIsParsedToHTMLCorrectly
             (string content, string expected)
         {
@@ -87,12 +88,17 @@ namespace SimpleWikiParser
         }
 
 
-        [Fact]
+        [Fact(Skip = "Figuring Things Out")]
         public void ContentWithCommonMarkLinkIsParsedToHTMLCorrectly()
         {
             // Arrange
+            var parser = new CommonMarkParser();
+            var content = "I have a [Link Here](SomeLink)";
+            var expected = "<p>I have a <a rel = \"nofollow\" href = \"SomeLink\">Link Here</a>";
             // Act
+            var actual = parser.ParseToHtml(content);
             // Assert
+            Assert.Equal(expected, actual);
         }
 
     }
@@ -106,6 +112,7 @@ namespace SimpleWikiParser
         public string ParseToHtml(string content)
         {
             var actualContent = content;
+            
             while (actualContent.Contains("***"))
             {
                 var startIndex = actualContent.IndexOf("***") + 3;

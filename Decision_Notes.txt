@@ -9,3 +9,17 @@ On Test case #3:
             The current solution might be clunky but I may be able to locate the abstraction 
             in the duplication of the code since it operates on substring indexes and
             enclosing of a content.
+
+On Test case #4:
+
+    
+    Problems using previous solution:
+            With the proliferation of contains(), its very hard to extract [Link Text](LinkURL). Even when you can extract
+            the [Link] and (LinkURL) theres no guarantee that it can be merged together during a replace in <a href> without
+            writing alot of string manipulation code
+
+    Possible Solution:
+            -> Refactoring to use a regex
+
+    Problem with Solution:
+            The Learning Curve is a bit high, with limited time to learn.

@@ -48,7 +48,22 @@ namespace SimpleWikiParser
             var actual =  someStr.Count(c => c == '*');
             // Assert
             Assert.Equal(2, actual);
-
         }
+
+
+        [Fact]
+        public void RegexMatchLearningTest() 
+        {
+            // Arrange
+            var someStr = "Link";
+            var regex = new Regex("[a-z]*");
+
+            // Act
+            var actual = regex.Match(someStr);
+
+            // Assert
+            Assert.Equal(someStr, actual.Value);
+        }
+
     }
 }
