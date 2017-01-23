@@ -1,0 +1,11 @@
+On Test case #3:
+
+   Possible Solutions:
+            -> Could've Implemented Regex, but I have to learn a bit on pattern matching
+            -> 
+
+   Solution: 
+            Implemented a 3rd case for bold and italic text using contains("***").
+            The current solution might be clunky but I may be able to locate the abstraction 
+            in the duplication of the code since it operates on substring indexes and
+            enclosing of a content.

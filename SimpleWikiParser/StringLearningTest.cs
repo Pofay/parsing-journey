@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -32,10 +33,22 @@ namespace SimpleWikiParser
             var someString = "**Pofay";
             // Act
             var actual = someString.Contains("**");
+            
             // Assert
             Assert.True(actual);
         }
 
 
+        [Fact]
+        public void StringCountLearningTest()
+        {
+            // Arrange
+            var someStr = "*Pofay*";
+            // Act
+            var actual =  someStr.Count(c => c == '*');
+            // Assert
+            Assert.Equal(2, actual);
+
+        }
     }
 }

@@ -71,9 +71,10 @@ namespace SimpleWikiParser
             Assert.Equal(expected, actual);
         }
 
-        [Theory(Skip = "Figuring Things out")]
+        [Theory]
         [InlineData("I have both *italic* and **bold** text", "<p>I have both <i>italic</i> and <b>bold</b> text</p>")]
         [InlineData("***Italic and bold***", "<p><b><i>Italic and bold</i></b></p>")]
+        [InlineData("***Some*** ***Text*** ***Here***", "<p><b><i>Some</i></b> <b><i>Text</i></b> <b><i>Here</i></b></p>")]
         public void ContentWithBothItalicAndBoldCommonMarkTagsIsTranslatedToHTMLCorrectly
             (string content, string expected)
         {
@@ -87,38 +88,39 @@ namespace SimpleWikiParser
 
     }
 
-    internal class CommonMarkParser
+    public class CommonMarkParser
     {
         public CommonMarkParser()
         {
         }
 
-        // Algorithm fails for having multiple tags since index of <b>* text </b>*
-        internal string ParseToHtml(string content)
+        public string ParseToHtml(string content)
         {
             var actualContent = content;
-            if (actualContent.Contains("**"))
+            while (actualContent.Contains("***"))
             {
-                while (actualContent.Contains("**"))
-                {
-                    var startIndex = actualContent.IndexOf("**") + 2;
-                    var endIndex = actualContent.IndexOf("**", startIndex);
-                    var extractedContent = actualContent.Substring(startIndex, endIndex - startIndex);
-                    actualContent = actualContent.Replace("**" + extractedContent + "**",
-                    "<b>" + extractedContent + "</b>");
-                }
+                var startIndex = actualContent.IndexOf("***") + 3;
+                var endIndex = actualContent.IndexOf("***", startIndex);
+                var extractedContent = actualContent.Substring(startIndex, endIndex - startIndex);
+                actualContent = actualContent.Replace("***" + extractedContent + "***",
+                    "<b><i>" + extractedContent + "</i></b>");
             }
-            if (actualContent.Contains("*"))
+            while (actualContent.Contains("**"))
             {
-                while (actualContent.Contains("*"))
-                {
-                    var startIndex = actualContent.IndexOf("*") + 1;
-                    var endIndex = actualContent.IndexOf("*", startIndex);
-                    var extractedContent = actualContent.Substring(startIndex, endIndex - startIndex);
-                    actualContent = actualContent.Replace("*" + extractedContent + "*",
-                    "<i>" + extractedContent + "</i>");
-                }
-            } 
+                var startIndex = actualContent.IndexOf("**") + 2;
+                var endIndex = actualContent.IndexOf("**", startIndex);
+                var extractedContent = actualContent.Substring(startIndex, endIndex - startIndex);
+                actualContent = actualContent.Replace("**" + extractedContent + "**",
+                "<b>" + extractedContent + "</b>");
+            }
+            while (actualContent.Contains("*"))
+            {
+                var startIndex = actualContent.IndexOf("*") + 1;
+                var endIndex = actualContent.IndexOf("*", startIndex);
+                var extractedContent = actualContent.Substring(startIndex, endIndex - startIndex);
+                actualContent = actualContent.Replace("*" + extractedContent + "*",
+                "<i>" + extractedContent + "</i>");
+            }
             return "<p>" + actualContent + "</p>";
         }
     }
