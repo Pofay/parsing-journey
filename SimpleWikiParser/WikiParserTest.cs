@@ -45,7 +45,7 @@ namespace SimpleWikiParser
         [InlineData(" Lorem ipsum *dolor*", "<p> Lorem ipsum <i>dolor</i></p>")]
         [InlineData("This is just *random text*","<p>This is just <i>random text</i></p>")]
         [InlineData("Secondary *random* *text*","<p>Secondary <i>random</i> <i>text</i></p>")]
-        public void ContentEnclosedWithCommonMarkItalicTagIsTransformedIntoItalicHTMLTag
+        public void ContentEnclosedWithCommonMarkItalicTagIsParsedIntoItalicHTMLTag
             (string content, string expected)
         {
             // Arrange
@@ -60,7 +60,7 @@ namespace SimpleWikiParser
         [InlineData("This is **bolded**", "<p>This is <b>bolded</b></p>")]
         [InlineData("**Exemplary text here**","<p><b>Exemplary text here</b></p>")]
         [InlineData("Multiple **text** and **twists**","<p>Multiple <b>text</b> and <b>twists</b></p>")]
-        public void ContentEnclosedWithCommonMarkBoldTagIsTranslatedIntoBoldHTMLTag
+        public void ContentEnclosedWithCommonMarkBoldTagIsParsedIntoBoldHTMLTag
             (string content, string expected)
         {
             // Arrange
@@ -75,7 +75,7 @@ namespace SimpleWikiParser
         [InlineData("I have both *italic* and **bold** text", "<p>I have both <i>italic</i> and <b>bold</b> text</p>")]
         [InlineData("***Italic and bold***", "<p><b><i>Italic and bold</i></b></p>")]
         [InlineData("***Some*** ***Text*** ***Here***", "<p><b><i>Some</i></b> <b><i>Text</i></b> <b><i>Here</i></b></p>")]
-        public void ContentWithBothItalicAndBoldCommonMarkTagsIsTranslatedToHTMLCorrectly
+        public void ContentWithBothItalicAndBoldCommonMarkTagsIsParsedToHTMLCorrectly
             (string content, string expected)
         {
             // Arrange
@@ -84,6 +84,15 @@ namespace SimpleWikiParser
             var actual = parser.ParseToHtml(content);
             // Assert
             Assert.Equal(expected, actual);
+        }
+
+
+        [Fact]
+        public void ContentWithCommonMarkLinkIsParsedToHTMLCorrectly()
+        {
+            // Arrange
+            // Act
+            // Assert
         }
 
     }
