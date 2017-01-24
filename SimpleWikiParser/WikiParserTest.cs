@@ -16,12 +16,12 @@ namespace SimpleWikiParser
         public void EmptyContentIsWrappedInsideParagraphTags()
         {
             // Arrange
-            var parser = new CommonMarkParser();
+            var sut = new CommonMarkParser();
             var expected = "<p></p>";
             var content = "";
 
             // Act
-            var actual = parser.ParseToHtml(content);
+            var actual = sut.ParseToHtml(content);
             // Assert
             actual.Should().BeEquivalentTo(expected);
         }
@@ -33,9 +33,9 @@ namespace SimpleWikiParser
             (string content, string expected)
         {
             // Arrange
-            var parser = new CommonMarkParser();
+            var sut = new CommonMarkParser();
             // Act
-            var actual = parser.ParseToHtml(content);
+            var actual = sut.ParseToHtml(content);
             // Assert
             actual.Should().BeEquivalentTo(expected);
         }
@@ -49,9 +49,9 @@ namespace SimpleWikiParser
             (string content, string expected)
         {
             // Arrange
-            var parser = new CommonMarkParser();
+            var sut = new CommonMarkParser();
             // Act
-            var actual = parser.ParseToHtml(content);
+            var actual = sut.ParseToHtml(content);
             // Assert
             actual.Should().BeEquivalentTo(expected);
 
@@ -66,9 +66,9 @@ namespace SimpleWikiParser
             (string content, string expected)
         {
             // Arrange
-            var parser = new CommonMarkParser();
+            var sut = new CommonMarkParser();
             // Act
-            var actual = parser.ParseToHtml(content);
+            var actual = sut.ParseToHtml(content);
             // Assert
             actual.Should().BeEquivalentTo(expected);
         }
@@ -82,9 +82,9 @@ namespace SimpleWikiParser
             (string content, string expected)
         {
             // Arrange
-            var parser = new CommonMarkParser();
+            var sut = new CommonMarkParser();
             // Act
-            var actual = parser.ParseToHtml(content);
+            var actual = sut.ParseToHtml(content);
             // Assert
             actual.Should().BeEquivalentTo(expected);
         }
@@ -93,11 +93,11 @@ namespace SimpleWikiParser
         public void ContentWithCommonMarkLinkIsParsedToHTMLCorrectly()
         {
             // Arrange
-            var parser = new CommonMarkParser();
+            var sut = new CommonMarkParser();
             var content = "I have a [Link Here](SomeLink)";
             var expected = "<p>I have a <a rel = \"nofollow\" href = \"SomeLink\">Link Here</a>";
             // Act
-            var actual = parser.ParseToHtml(content);
+            var actual = sut.ParseToHtml(content);
             // Assert
             actual.Should().BeEquivalentTo(expected);
         }
