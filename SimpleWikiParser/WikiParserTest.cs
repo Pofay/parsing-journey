@@ -112,35 +112,34 @@ namespace SimpleWikiParser
         public string ParseToHtml(string content)
         {
             var actualContent = content;
-            if (actualContent.Contains("***"))
+            var tokens = new string[] { "***", "**", "*" };
+            if (tokens.Any(t => actualContent.Contains(t)))
             {
-                var tokens = new string[] { "***" };
-                var extracted = actualContent.Split(tokens, StringSplitOptions.None)
+                // Process Both Bold and Italic Tags
+                var boldAndItalicToken = new string[] { tokens[0] };
+                var extracted = actualContent.Split(boldAndItalicToken, StringSplitOptions.None)
                                 .Where(e => !string.IsNullOrWhiteSpace(e));
                 foreach (var item in extracted)
                 {
                     actualContent = actualContent.Replace("***" + item + "***",
                     "<b><i>" + item + "</i></b>");
                 }
-            }
-            if (actualContent.Contains("**"))
-            {
-                var tokens = new string[] { "**" };
-                var extracted = actualContent.Split(tokens, StringSplitOptions.None)
+
+                // Process Bold Tags
+                var boldToken = new string[] { tokens[1] };
+                var boldExtractedText = actualContent.Split(boldToken, StringSplitOptions.None)
                                 .Where(e => !string.IsNullOrWhiteSpace(e));
-                foreach (var item in extracted)
+                foreach (var item in boldExtractedText)
                 {
                     actualContent = actualContent.Replace("**" + item + "**",
                     "<b>" + item + "</b>");
                 }
 
-            }
-            if (actualContent.Contains("*"))
-            {
-                var tokens = new char[] { '*' };
-                var extracted = actualContent.Split(tokens, StringSplitOptions.None)
+                // Process Italic Tags
+                var italicToken = new string[] { tokens[2] };
+                var italicExtractedText = actualContent.Split(italicToken, StringSplitOptions.None)
                                 .Where(e => !string.IsNullOrWhiteSpace(e));
-                foreach (var item in extracted)
+                foreach (var item in italicExtractedText)
                 {
                     actualContent = actualContent.Replace("*" + item + "*",
                     "<i>" + item + "</i>");
