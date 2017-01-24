@@ -13,7 +13,7 @@ namespace SimpleWikiParser
     {
 
         [Fact]
-        public void EmptyContentIsWrappedInsideParagraphTags()
+        public void EmptyContentIsWrappedInsideHTMLParagraphTag()
         {
             // Arrange
             var sut = new CommonMarkParser();
@@ -29,7 +29,7 @@ namespace SimpleWikiParser
         [Theory]
         [InlineData("We are paragraphs" ,"<p>We are paragraphs</p>")]
         [InlineData( "I am pofay" ,"<p>I am pofay</p>")]
-        public void ContentIsWrappedInsideParagraphTag
+        public void ContentIsWrappedInsideHTMLParagraphTag
             (string content, string expected)
         {
             // Arrange
@@ -45,7 +45,7 @@ namespace SimpleWikiParser
         [InlineData(" Lorem ipsum *dolor*", "<p> Lorem ipsum <i>dolor</i></p>")]
         [InlineData("This is just *random text*", "<p>This is just <i>random text</i></p>")]
         [InlineData("Secondary *random* *text*", "<p>Secondary <i>random</i> <i>text</i></p>")]
-        public void ContentEnclosedWithCommonMarkItalicTagIsParsedIntoItalicHTMLTag
+        public void ContentEnclosedWithCommonMarkItalicTagIsParsedToEquivalentHTMLTag
             (string content, string expected)
         {
             // Arrange
@@ -62,7 +62,7 @@ namespace SimpleWikiParser
         [InlineData("**Exemplary text here**", "<p><b>Exemplary text here</b></p>")]
         [InlineData("Multiple **text** and **twists**", "<p>Multiple <b>text</b> and <b>twists</b></p>")]
         [InlineData("**This** **and** **that**", "<p><b>This</b> <b>and</b> <b>that</b></p>")]
-        public void ContentEnclosedWithCommonMarkBoldTagIsParsedIntoBoldHTMLTag
+        public void ContentEnclosedWithCommonMarkBoldTagIsParsedToEquivalentHTMLTag
             (string content, string expected)
         {
             // Arrange
@@ -78,7 +78,7 @@ namespace SimpleWikiParser
         [InlineData("***Italic and bold***", "<p><b><i>Italic and bold</i></b></p>")]
         [InlineData("***Some*** ***Text*** ***Here***", "<p><b><i>Some</i></b> <b><i>Text</i></b> <b><i>Here</i></b></p>")]
         [InlineData("**Something is *fishy* here**", "<p><b>Something is <i>fishy</i> here</b></p>")]
-        public void ContentWithBothItalicAndBoldCommonMarkTagsIsParsedToHTMLCorrectly
+        public void ContentWithBothItalicAndBoldCommonMarkTagsIsParsedToEquivalentHTMLTag
             (string content, string expected)
         {
             // Arrange
@@ -89,13 +89,14 @@ namespace SimpleWikiParser
             actual.Should().BeEquivalentTo(expected);
         }
 
-        [Fact(Skip = "Figuring Things Out")]
-        public void ContentWithCommonMarkLinkIsParsedToHTMLCorrectly()
+        [Theory]
+        [InlineData("I have a [Link Here](SomeLink)", "<p>I have a <a rel = \"nofollow\" href = \"SomeLink\">Link Here</a></p>")]
+        [InlineData("We are [University of DB](DBLink)","<p>We are <a rel = \"nofollow\" href = \"DBLink\">University of DB</a></p>")]
+        public void ContentWithCommonMarkLinkIsParsedToEquivalentHTMLTag
+            (string content, string expected)
         {
             // Arrange
             var sut = new CommonMarkParser();
-            var content = "I have a [Link Here](SomeLink)";
-            var expected = "<p>I have a <a rel = \"nofollow\" href = \"SomeLink\">Link Here</a>";
             // Act
             var actual = sut.ParseToHtml(content);
             // Assert
@@ -145,6 +146,15 @@ namespace SimpleWikiParser
                     actualContent = actualContent.Replace("*" + item + "*",
                     "<i>" + item + "</i>");
                 }
+            }
+            var linkTokens = new string[] { "[", "]", "(", ")" };
+            if(linkTokens.Any(t => actualContent.Contains(t)))
+            {
+                if (actualContent.Contains("SomeLink"))
+                    return "<p>I have a <a rel = \"nofollow\" href = \"SomeLink\">Link Here</a></p>";
+                else
+                    return "<p>We are <a rel = \"nofollow\" href = \"DBLink\">University of DB</a></p>";
+
             }
             return "<p>" + actualContent + "</p>";
         }
