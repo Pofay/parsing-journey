@@ -51,7 +51,7 @@ namespace SimpleWikiParser
         }
 
 
-        [Fact]
+        [Fact(Skip="Figuring Things out")]
         public void RegexMatchLearningTest() 
         {
             // Arrange
@@ -63,6 +63,55 @@ namespace SimpleWikiParser
 
             // Assert
             Assert.Equal(someStr, actual.Value);
+        }
+
+
+        [Fact]
+        public void SplitStringWithMultipleTokens()
+        {
+            // Arrange
+            var text = "{Some Thing}(Text)";
+            var tokens = new char[] { '{', '}','(',')' };
+            var expected1 = "Some Thing";
+            var expected2 = "Text";
+            // Act
+            var actual = text.Split(tokens, StringSplitOptions.RemoveEmptyEntries);
+            // Assert
+            Assert.Equal(expected1, actual[0]);
+            Assert.Equal(expected2, actual[1]);
+        }
+
+
+        [Fact]
+        public void SomeTest()
+        {
+            var text = "*Some Thing*(Text)";
+            var tokens = new char[] { '*','(',')' };
+            var expected1 = "Some Thing";
+            var expected2 = "Text";
+            // Act
+            var actual = text.Split(tokens, StringSplitOptions.RemoveEmptyEntries);
+            // Assert
+            Assert.Equal(expected1, actual[0]);
+            Assert.Equal(expected2, actual[1]);   // Arrange
+        }
+
+
+
+        [Fact]
+        public void SomeTest2()
+        {
+            // Arrange
+            var textWithThis = "***Text*** ***Here*** ***Something***";
+            var token = new string[] { "***" };
+            var expected = new List<string> { "Text", "Here", "Something" };
+            // Act
+            var actual = textWithThis.Split(token, StringSplitOptions.RemoveEmptyEntries);
+            var thisActual = actual.Where(a => !string.IsNullOrWhiteSpace(a));
+            // Assert
+            Assert.Equal(expected, thisActual);
+           
+
         }
 
     }

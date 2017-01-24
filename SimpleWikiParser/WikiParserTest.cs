@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace SimpleWikiParser 
+namespace SimpleWikiParser
 {
     public class WikiParserTest
     {
@@ -25,12 +25,11 @@ namespace SimpleWikiParser
             Assert.Equal(expected, actual);
         }
 
-
         [Theory]
         [InlineData("<p>We are paragraphs</p>", "We are paragraphs")]
         [InlineData("<p>I am pofay</p>", "I am pofay")]
         public void ContentIsWrappedInsideParagraphTag
-            (string expected, string content) 
+            (string expected, string content)
         {
             // Arrange
             var parser = new CommonMarkParser();
@@ -43,8 +42,8 @@ namespace SimpleWikiParser
         [Theory]
         [InlineData("*Test Text*", "<p><i>Test Text</i></p>")]
         [InlineData(" Lorem ipsum *dolor*", "<p> Lorem ipsum <i>dolor</i></p>")]
-        [InlineData("This is just *random text*","<p>This is just <i>random text</i></p>")]
-        [InlineData("Secondary *random* *text*","<p>Secondary <i>random</i> <i>text</i></p>")]
+        [InlineData("This is just *random text*", "<p>This is just <i>random text</i></p>")]
+        [InlineData("Secondary *random* *text*", "<p>Secondary <i>random</i> <i>text</i></p>")]
         public void ContentEnclosedWithCommonMarkItalicTagIsParsedIntoItalicHTMLTag
             (string content, string expected)
         {
@@ -58,8 +57,9 @@ namespace SimpleWikiParser
 
         [Theory]
         [InlineData("This is **bolded**", "<p>This is <b>bolded</b></p>")]
-        [InlineData("**Exemplary text here**","<p><b>Exemplary text here</b></p>")]
-        [InlineData("Multiple **text** and **twists**","<p>Multiple <b>text</b> and <b>twists</b></p>")]
+        [InlineData("**Exemplary text here**", "<p><b>Exemplary text here</b></p>")]
+        [InlineData("Multiple **text** and **twists**", "<p>Multiple <b>text</b> and <b>twists</b></p>")]
+        [InlineData("**This** **and** **that**", "<p><b>This</b> <b>and</b> <b>that</b></p>")]
         public void ContentEnclosedWithCommonMarkBoldTagIsParsedIntoBoldHTMLTag
             (string content, string expected)
         {
@@ -112,30 +112,39 @@ namespace SimpleWikiParser
         public string ParseToHtml(string content)
         {
             var actualContent = content;
-            
-            while (actualContent.Contains("***"))
+            if (actualContent.Contains("***"))
             {
-                var startIndex = actualContent.IndexOf("***") + 3;
-                var endIndex = actualContent.IndexOf("***", startIndex);
-                var extractedContent = actualContent.Substring(startIndex, endIndex - startIndex);
-                actualContent = actualContent.Replace("***" + extractedContent + "***",
-                    "<b><i>" + extractedContent + "</i></b>");
+                var tokens = new string[] { "***" };
+                var extracted = actualContent.Split(tokens, StringSplitOptions.None)
+                                .Where(e => !string.IsNullOrWhiteSpace(e));
+                foreach (var item in extracted)
+                {
+                    actualContent = actualContent.Replace("***" + item + "***",
+                    "<b><i>" + item + "</i></b>");
+                }
             }
-            while (actualContent.Contains("**"))
+            if (actualContent.Contains("**"))
             {
-                var startIndex = actualContent.IndexOf("**") + 2;
-                var endIndex = actualContent.IndexOf("**", startIndex);
-                var extractedContent = actualContent.Substring(startIndex, endIndex - startIndex);
-                actualContent = actualContent.Replace("**" + extractedContent + "**",
-                "<b>" + extractedContent + "</b>");
+                var tokens = new string[] { "**" };
+                var extracted = actualContent.Split(tokens, StringSplitOptions.None)
+                                .Where(e => !string.IsNullOrWhiteSpace(e));
+                foreach (var item in extracted)
+                {
+                    actualContent = actualContent.Replace("**" + item + "**",
+                    "<b>" + item + "</b>");
+                }
+
             }
-            while (actualContent.Contains("*"))
+            if (actualContent.Contains("*"))
             {
-                var startIndex = actualContent.IndexOf("*") + 1;
-                var endIndex = actualContent.IndexOf("*", startIndex);
-                var extractedContent = actualContent.Substring(startIndex, endIndex - startIndex);
-                actualContent = actualContent.Replace("*" + extractedContent + "*",
-                "<i>" + extractedContent + "</i>");
+                var tokens = new char[] { '*' };
+                var extracted = actualContent.Split(tokens, StringSplitOptions.None)
+                                .Where(e => !string.IsNullOrWhiteSpace(e));
+                foreach (var item in extracted)
+                {
+                    actualContent = actualContent.Replace("*" + item + "*",
+                    "<i>" + item + "</i>");
+                }
             }
             return "<p>" + actualContent + "</p>";
         }
