@@ -83,8 +83,9 @@ namespace SimpleWikiParser
 
 
         [Fact]
-        public void SomeTest()
+        public void SplitStringOnMultipleTokensUsingCharacters()
         {
+            //Arrange
             var text = "*Some Thing*(Text)";
             var tokens = new char[] { '*','(',')' };
             var expected1 = "Some Thing";
@@ -93,13 +94,13 @@ namespace SimpleWikiParser
             var actual = text.Split(tokens, StringSplitOptions.RemoveEmptyEntries);
             // Assert
             Assert.Equal(expected1, actual[0]);
-            Assert.Equal(expected2, actual[1]);   // Arrange
+            Assert.Equal(expected2, actual[1]);  
         }
 
 
 
         [Fact]
-        public void SomeTest2()
+        public void SplitStringOnAStringTokenWithRemovedEmptyEntries()
         {
             // Arrange
             var textWithThis = "***Text*** ***Here*** ***Something***";
