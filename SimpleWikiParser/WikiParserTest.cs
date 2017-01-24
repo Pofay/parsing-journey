@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FluentAssertions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,21 +23,21 @@ namespace SimpleWikiParser
             // Act
             var actual = parser.ParseToHtml(content);
             // Assert
-            Assert.Equal(expected, actual);
+            actual.Should().BeEquivalentTo(expected);
         }
 
         [Theory]
-        [InlineData("<p>We are paragraphs</p>", "We are paragraphs")]
-        [InlineData("<p>I am pofay</p>", "I am pofay")]
+        [InlineData("We are paragraphs" ,"<p>We are paragraphs</p>")]
+        [InlineData( "I am pofay" ,"<p>I am pofay</p>")]
         public void ContentIsWrappedInsideParagraphTag
-            (string expected, string content)
+            (string content, string expected)
         {
             // Arrange
             var parser = new CommonMarkParser();
             // Act
             var actual = parser.ParseToHtml(content);
             // Assert
-            Assert.Equal(expected, actual);
+            actual.Should().BeEquivalentTo(expected);
         }
 
         [Theory]
@@ -52,7 +53,8 @@ namespace SimpleWikiParser
             // Act
             var actual = parser.ParseToHtml(content);
             // Assert
-            Assert.Equal(expected, actual);
+            actual.Should().BeEquivalentTo(expected);
+
         }
 
         [Theory]
@@ -68,7 +70,7 @@ namespace SimpleWikiParser
             // Act
             var actual = parser.ParseToHtml(content);
             // Assert
-            Assert.Equal(expected, actual);
+            actual.Should().BeEquivalentTo(expected);
         }
 
         [Theory]
@@ -84,9 +86,8 @@ namespace SimpleWikiParser
             // Act
             var actual = parser.ParseToHtml(content);
             // Assert
-            Assert.Equal(expected, actual);
+            actual.Should().BeEquivalentTo(expected);
         }
-
 
         [Fact(Skip = "Figuring Things Out")]
         public void ContentWithCommonMarkLinkIsParsedToHTMLCorrectly()
@@ -98,7 +99,7 @@ namespace SimpleWikiParser
             // Act
             var actual = parser.ParseToHtml(content);
             // Assert
-            Assert.Equal(expected, actual);
+            actual.Should().BeEquivalentTo(expected);
         }
 
     }

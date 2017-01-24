@@ -83,7 +83,7 @@ namespace SimpleWikiParser
 
 
         [Fact]
-        public void SplitStringOnMultipleTokensUsingCharacters()
+        public void SplitStringOnDifferentCharacters()
         {
             //Arrange
             var text = "*Some Thing*(Text)";
@@ -98,7 +98,6 @@ namespace SimpleWikiParser
         }
 
 
-
         [Fact]
         public void SplitStringOnAStringTokenWithRemovedEmptyEntries()
         {
@@ -111,8 +110,6 @@ namespace SimpleWikiParser
             var thisActual = actual.Where(a => !string.IsNullOrWhiteSpace(a));
             // Assert
             Assert.Equal(expected, thisActual);
-           
-
         }
 
     }
